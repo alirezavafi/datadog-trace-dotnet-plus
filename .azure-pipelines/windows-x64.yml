@@ -19,6 +19,7 @@ variables:
   DD_DOTNET_TRACER_MSBUILD:
   nugetNativeCacheFolder: $(System.DefaultWorkingDirectory)/packages
   nugetManagedCacheFolder: $(System.DefaultWorkingDirectory)/.nuget_cache
+  dotnetCache: $(Agent.ToolsDirectory)/dotnet
 
 # Declare the datadog agent as a resource to be used as a pipeline service
 resources:
@@ -100,6 +101,14 @@ stages:
           nuget_managed
         path: $(nugetManagedCacheFolder)
       displayName: Cache Nuget packages
+
+    - task: Cache@2
+      inputs:
+        key: 'dotnet_cache | "$(Agent.OS)"'
+        restoreKeys: |
+          dotnet_cache
+        path: $(dotnetCache)
+      displayName: Cache Dotnet
 
     - task: UseDotNet@2
       displayName: install dotnet core runtime 2.1
