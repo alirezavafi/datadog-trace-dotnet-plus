@@ -16,6 +16,8 @@ variables:
   dotnetCoreSdk5Version: 5.0.100
   ddApiKey: $(DD_API_KEY)
   DD_DOTNET_TRACER_MSBUILD:
+  nugetNativeCacheFolder: $(System.DefaultWorkingDirectory)/packages
+  nugetManagedCacheFolder: $(System.DefaultWorkingDirectory)/.nuget_managed
 
 # Declare the datadog agent as a resource to be used as a pipeline service
 resources:
@@ -41,6 +43,15 @@ stages:
       vmImage: windows-2019
     steps:
 
+    - task: Cache@2
+      inputs:
+        key: 'nuget | "$(Agent.OS)" | src/**/*.csproj'
+        restoreKeys: |
+          nuget | "$(Agent.OS)"
+          nuget
+        path: $(nugetNativeCacheFolder)
+      displayName: Cache Nuget packages
+
     - task: NuGetToolInstaller@1
       displayName: install nuget
 
@@ -58,6 +69,15 @@ stages:
     pool:
       vmImage: windows-2019
     steps:
+
+    - task: Cache@2
+      inputs:
+        key: 'nuget | "$(Agent.OS)" | src/**/*.csproj'
+        restoreKeys: |
+          nuget | "$(Agent.OS)"
+          nuget
+        path: $(nugetManagedCacheFolder)
+      displayName: Cache Nuget packages
 
     - task: UseDotNet@2
       displayName: install dotnet core runtime 2.1
@@ -88,7 +108,7 @@ stages:
       inputs:
         command: restore
         projects: src/**/*.csproj
-        restoreDirectory: $(System.DefaultWorkingDirectory)/nuget-cache
+        restoreDirectory: $(nugetManagedCacheFolder)
 
     - publish: $(System.DefaultWorkingDirectory)
       artifact: source-managed-restore
