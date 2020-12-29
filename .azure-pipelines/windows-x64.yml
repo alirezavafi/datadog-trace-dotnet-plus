@@ -153,8 +153,10 @@ stages:
 
     - checkout: none
 
-    - download: current
-      artifact: source-managed-restore
+    - task: DownloadPipelineArtifact@2
+      inputs:
+        artifact: source-managed-restore
+        path: $(Pipeline.Workspace)
 
     - task: Cache@2
       inputs:
