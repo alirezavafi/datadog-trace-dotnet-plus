@@ -47,8 +47,8 @@ stages:
       inputs:
         key: 'nuget_native | "$(Agent.OS)" | src/**/*.csproj'
         restoreKeys: |
-          nuget | "$(Agent.OS)"
-          nuget
+          nuget_native | "$(Agent.OS)"
+          nuget_native
         path: $(nugetNativeCacheFolder)
       displayName: Cache Nuget packages
 
@@ -74,8 +74,8 @@ stages:
       inputs:
         key: 'nuget_managed | "$(Agent.OS)" | src/**/*.csproj'
         restoreKeys: |
-          nuget | "$(Agent.OS)"
-          nuget
+          nuget_managed | "$(Agent.OS)"
+          nuget_managed
         path: $(nugetManagedCacheFolder)
       displayName: Cache Nuget packages
 
@@ -112,6 +112,7 @@ stages:
           test/**/*.Tests.csproj
           benchmarks/**/*.csproj
         restoreDirectory: $(nugetManagedCacheFolder)
+        verbosityRestore: Normal
 
     - publish: $(System.DefaultWorkingDirectory)
       artifact: source-managed-restore
