@@ -88,8 +88,7 @@ stages:
       inputs:
         command: restore
         projects: src/**/*.csproj
-      env:
-        globalPackagesFolder: $(System.DefaultWorkingDirectory)/nuget-cache
+        restoreDirectory: $(System.DefaultWorkingDirectory)/nuget-cache
 
     - publish: $(System.DefaultWorkingDirectory)
       artifact: source-managed-restore
