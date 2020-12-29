@@ -36,7 +36,7 @@ resources:
 stages:
 
 # restore stage: run nuget restore and dotnet restore in all source
-- stage: build_and_unit_tests
+- stage: build
   jobs:
 
   # native build
@@ -62,27 +62,6 @@ stages:
       inputs:
         restoreSolution: Datadog.Trace.Native.sln
         verbosityRestore: Detailed
-
-    - task: MSBuild@1
-      displayName: msbuild
-      inputs:
-        solution: Datadog.Trace.proj
-        platform: $(buildPlatform)
-        configuration: $(buildConfiguration)
-        msbuildArguments: /t:BuildCpp;BuildCppTests
-        maximumCpuCount: true
-
-    - script: Datadog.Trace.ClrProfiler.Native.Tests.exe --gtest_output=xml
-      displayName: run tests
-      workingDirectory: $(System.DefaultWorkingDirectory)/test/Datadog.Trace.ClrProfiler.Native.Tests/bin/$(buildConfiguration)/$(buildPlatform)
-
-    - task: PublishTestResults@2
-      displayName: publish test results
-      inputs:
-        testResultsFiles: test/**/test*.xml
-        buildPlatform: $(buildPlatform)
-        buildConfiguration: $(buildConfiguration)
-      condition: succeededOrFailed()
 
     - publish: $(System.DefaultWorkingDirectory)
       artifact: source-native-restore
@@ -172,5 +151,59 @@ stages:
     - publish: $(System.DefaultWorkingDirectory)
       artifact: source-managed-restore
 
-# build stage: Build the profiler and the managed code.
-#- stage: build 
+# test stage: Test the profiler and the managed code.
+- stage: unit-test 
+
+  # managed test
+  - job: managed
+    pool:
+      vmImage: windows-2019
+    steps:
+
+    - checkout: none
+
+    - download: current
+      artifact: source-managed-restore
+      patterns: '**/*'
+
+    - task: Cache@2
+      inputs:
+        key: 'dotnet_cache | "$(Agent.OS)"'
+        restoreKeys: |
+          dotnet_cache
+        path: $(dotnetCache)
+      displayName: Cache Dotnet
+
+    - task: UseDotNet@2
+      displayName: install dotnet core runtime 2.1
+      inputs:
+        packageType: runtime
+        version: 2.1.x
+
+    - task: UseDotNet@2
+      displayName: install dotnet core runtime 3.0
+      inputs:
+        packageType: runtime
+        version: 3.0.x
+
+    - task: UseDotNet@2
+      displayName: install dotnet core sdk 3.1
+      inputs:
+        packageType: sdk
+        version: $(dotnetCoreSdkVersion)
+
+    - task: UseDotNet@2
+      displayName: install dotnet core sdk 5.0
+      inputs:
+        packageType: sdk
+        version: $(dotnetCoreSdk5Version)
+
+    - task: DotNetCoreCLI@2
+      displayName: dotnet test
+      inputs:
+        command: test
+        configuration: $(buildConfiguration)
+        arguments: --no-build --no-restore
+        projects: test/**/*.Tests.csproj
+      env:
+        DD_SERVICE_NAME: dd-tracer-dotnet
