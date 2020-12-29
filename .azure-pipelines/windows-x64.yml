@@ -156,7 +156,7 @@ stages:
     - task: DownloadPipelineArtifact@2
       inputs:
         artifact: source-managed-restore
-        path: $(Pipeline.Workspace)
+        path: $(System.DefaultWorkingDirectory)
 
     - task: Cache@2
       inputs:
