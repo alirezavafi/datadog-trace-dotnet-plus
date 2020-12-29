@@ -155,7 +155,6 @@ stages:
 
     - download: current
       artifact: source-managed-restore
-      patterns: '**/*'
 
     - task: Cache@2
       inputs:
