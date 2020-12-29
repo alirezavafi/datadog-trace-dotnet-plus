@@ -36,7 +36,7 @@ stages:
   jobs:
 
   # native restore
-  - job: native restore
+  - job: native_restore
     pool:
       vmImage: windows-2019
     steps:
@@ -54,7 +54,7 @@ stages:
       artifact: source-native-restore
 
   # managed restore
-  - job: managed restore
+  - job: managed_restore
     pool:
       vmImage: windows-2019
     steps:
