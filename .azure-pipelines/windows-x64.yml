@@ -17,7 +17,7 @@ variables:
   ddApiKey: $(DD_API_KEY)
   DD_DOTNET_TRACER_MSBUILD:
   nugetNativeCacheFolder: $(System.DefaultWorkingDirectory)/packages
-  nugetManagedCacheFolder: $(System.DefaultWorkingDirectory)/.nuget_managed
+  nugetManagedCacheFolder: $(System.DefaultWorkingDirectory)/.nuget_cache
 
 # Declare the datadog agent as a resource to be used as a pipeline service
 resources:
@@ -38,14 +38,14 @@ stages:
   jobs:
 
   # native restore
-  - job: native_restore
+  - job: native
     pool:
       vmImage: windows-2019
     steps:
 
     - task: Cache@2
       inputs:
-        key: 'nuget | "$(Agent.OS)" | src/**/*.csproj'
+        key: 'nuget_native | "$(Agent.OS)" | src/**/*.csproj'
         restoreKeys: |
           nuget | "$(Agent.OS)"
           nuget
@@ -65,14 +65,14 @@ stages:
       artifact: source-native-restore
 
   # managed restore
-  - job: managed_restore
+  - job: managed
     pool:
       vmImage: windows-2019
     steps:
 
     - task: Cache@2
       inputs:
-        key: 'nuget | "$(Agent.OS)" | src/**/*.csproj'
+        key: 'nuget_managed | "$(Agent.OS)" | src/**/*.csproj'
         restoreKeys: |
           nuget | "$(Agent.OS)"
           nuget
@@ -107,7 +107,10 @@ stages:
       displayName: dotnet restore
       inputs:
         command: restore
-        projects: src/**/*.csproj
+        projects: |
+          src/**/*.csproj
+          test/**/*.Tests.csproj
+          benchmarks/**/*.csproj
         restoreDirectory: $(nugetManagedCacheFolder)
 
     - publish: $(System.DefaultWorkingDirectory)
