@@ -1,0 +1,96 @@
+trigger:
+  branches:
+    include:
+      - '*'
+    exclude:
+      - refs/pull/*/head
+  paths:
+    exclude:
+      - docs/*
+      - .github/*
+
+# Global variables
+variables:
+  buildConfiguration: Debug
+  dotnetCoreSdkVersion: 3.1.107
+  dotnetCoreSdk5Version: 5.0.100
+  ddApiKey: $(DD_API_KEY)
+  DD_DOTNET_TRACER_MSBUILD:
+
+# Declare the datadog agent as a resource to be used as a pipeline service
+resources:
+  containers:
+  - container: dd_agent
+    image: datadog/agent
+    ports:
+    - 8126:8126
+    env:
+      DD_API_KEY: $(ddApiKey)
+      DD_INSIDE_CI: true
+
+# Stages
+stages:
+
+# restore stage: run nuget restore and dotnet restore in all source
+- stage: restore
+  jobs:
+
+  # native restore
+  - job: native restore
+    pool:
+      vmImage: windows-2019
+    steps:
+
+    - task: NuGetToolInstaller@1
+      displayName: install nuget
+
+    - task: NuGetCommand@2
+      displayName: nuget restore
+      inputs:
+        restoreSolution: Datadog.Trace.Native.sln
+        verbosityRestore: Detailed
+
+    - publish: $(System.DefaultWorkingDirectory)
+      artifact: source-native-restore
+
+  # managed restore
+  - job: managed restore
+    pool:
+      vmImage: windows-2019
+    steps:
+
+    - task: UseDotNet@2
+      displayName: install dotnet core runtime 2.1
+      inputs:
+        packageType: runtime
+        version: 2.1.x
+
+    - task: UseDotNet@2
+      displayName: install dotnet core runtime 3.0
+      inputs:
+        packageType: runtime
+        version: 3.0.x
+
+    - task: UseDotNet@2
+      displayName: install dotnet core sdk 3.1
+      inputs:
+        packageType: sdk
+        version: $(dotnetCoreSdkVersion)
+
+    - task: UseDotNet@2
+      displayName: install dotnet core sdk 5.0
+      inputs:
+        packageType: sdk
+        version: $(dotnetCoreSdk5Version)
+
+    - task: DotNetCoreCLI@2
+      displayName: dotnet restore
+      inputs:
+        command: restore
+        projects: src/**/*.csproj
+
+    - publish: $(System.DefaultWorkingDirectory)
+      artifact: source-managed-restore
+
+# build stage: Build the profiler and the managed code.
+#- stage: build 
