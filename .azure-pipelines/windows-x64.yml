@@ -34,10 +34,10 @@ resources:
 stages:
 
 # restore stage: run nuget restore and dotnet restore in all source
-- stage: restore
+- stage: build_and_unit_tests
   jobs:
 
-  # native restore
+  # native build
   - job: native
     pool:
       vmImage: windows-2019
@@ -61,10 +61,31 @@ stages:
         restoreSolution: Datadog.Trace.Native.sln
         verbosityRestore: Detailed
 
+    - task: MSBuild@1
+      displayName: msbuild
+      inputs:
+        solution: Datadog.Trace.proj
+        platform: $(buildPlatform)
+        configuration: $(buildConfiguration)
+        msbuildArguments: /t:BuildCpp;BuildCppTests
+        maximumCpuCount: true
+
+    - script: Datadog.Trace.ClrProfiler.Native.Tests.exe --gtest_output=xml
+      displayName: run tests
+      workingDirectory: $(System.DefaultWorkingDirectory)/test/Datadog.Trace.ClrProfiler.Native.Tests/bin/$(buildConfiguration)/$(buildPlatform)
+
+    - task: PublishTestResults@2
+      displayName: publish test results
+      inputs:
+        testResultsFiles: test/**/test*.xml
+        buildPlatform: $(buildPlatform)
+        buildConfiguration: $(buildConfiguration)
+      condition: succeededOrFailed()
+
     - publish: $(System.DefaultWorkingDirectory)
       artifact: source-native-restore
 
-  # managed restore
+  # managed build
   - job: managed
     pool:
       vmImage: windows-2019
@@ -113,6 +134,20 @@ stages:
           benchmarks/**/*.csproj
         restoreDirectory: $(nugetManagedCacheFolder)
         verbosityRestore: Normal
+
+    - task: DotNetCoreCLI@2
+      displayName: dotnet build
+      inputs:
+        command: build
+        configuration: $(buildConfiguration)
+        arguments: --no-restore /nowarn:netsdk1138 #-l:DatadogLogger,"$(DD_DOTNET_TRACER_MSBUILD)"
+        projects: |
+          src/**/*.csproj
+          test/**/*.Tests.csproj
+          benchmarks/**/*.csproj
+          !src/Datadog.Trace.Tools.Runner/*.csproj
+      env:
+        DD_SERVICE_NAME: dd-tracer-dotnet
 
     - publish: $(System.DefaultWorkingDirectory)
       artifact: source-managed-restore
