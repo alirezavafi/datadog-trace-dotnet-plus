@@ -153,7 +153,8 @@ stages:
 
 # test stage: Test the profiler and the managed code.
 - stage: unit-test 
-
+  jobs:
+  
   # managed test
   - job: managed
     pool:
