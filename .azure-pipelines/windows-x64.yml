@@ -152,9 +152,9 @@ stages:
       artifact: source-managed-restore
 
 # test stage: Test the profiler and the managed code.
-- stage: unit-test 
+- stage: unit_tests 
   jobs:
-  
+
   # managed test
   - job: managed
     pool:
