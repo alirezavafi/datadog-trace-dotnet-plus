@@ -12,6 +12,7 @@ trigger:
 # Global variables
 variables:
   buildConfiguration: Debug
+  buildPlatform: x64
   dotnetCoreSdkVersion: 3.1.107
   dotnetCoreSdk5Version: 5.0.100
   ddApiKey: $(DD_API_KEY)
@@ -146,6 +147,16 @@ stages:
           test/**/*.Tests.csproj
           benchmarks/**/*.csproj
           !src/Datadog.Trace.Tools.Runner/*.csproj
+      env:
+        DD_SERVICE_NAME: dd-tracer-dotnet
+
+    - task: DotNetCoreCLI@2
+      displayName: dotnet test
+      inputs:
+        command: test
+        configuration: $(buildConfiguration)
+        arguments: --no-build --no-restore
+        projects: test/**/*.Tests.csproj
       env:
         DD_SERVICE_NAME: dd-tracer-dotnet
 
