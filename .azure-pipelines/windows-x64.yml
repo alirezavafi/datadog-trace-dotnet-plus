@@ -35,12 +35,11 @@ resources:
 # Stages
 stages:
 
-# restore stage: run nuget restore and dotnet restore in all source
-- stage: build
+# native build stage
+- stage: native_build
+  dependsOn: []
   jobs:
-
-  # native build
-  - job: native
+  - job: build
     pool:
       vmImage: windows-2019
     steps:
@@ -116,8 +115,13 @@ stages:
     - publish: $(System.DefaultWorkingDirectory)
       artifact: source-native-restore
 
-  # managed build
-  - job: managed
+
+
+# managed build stage
+- stage: managed_build
+  dependsOn: []
+  jobs:
+  - job: build
     pool:
       vmImage: windows-2019
     steps:
@@ -191,12 +195,15 @@ stages:
     - publish: $(System.DefaultWorkingDirectory)
       artifact: source-managed-restore
 
-# test stage: Test the profiler and the managed code.
-- stage: unit_tests 
+
+
+# managed unit tests stage
+- stage: managed_unit_tests 
+  dependsOn: managed_build
   jobs:
 
   # managed test
-  - job: managed
+  - job: unit_tests
     pool:
       vmImage: windows-2019
     steps:
