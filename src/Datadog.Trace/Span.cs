@@ -5,7 +5,7 @@ using Datadog.Trace.Abstractions;
 using Datadog.Trace.ExtensionMethods;
 using Datadog.Trace.Logging;
 using Datadog.Trace.Tagging;
-using Datadog.Trace.Vendors.Serilog.Events;
+using Serilog.Events;
 
 namespace Datadog.Trace
 {
@@ -17,7 +17,7 @@ namespace Datadog.Trace
     /// </summary>
     public class Span : IDisposable, ISpan
     {
-        private static readonly Vendors.Serilog.ILogger Log = DatadogLogging.For<Span>();
+        private static readonly Serilog.ILogger Log = DatadogLogging.For<Span>();
         private static readonly bool IsLogLevelDebugEnabled = Log.IsEnabled(LogEventLevel.Debug);
 
         private readonly object _lock = new object();
@@ -82,17 +82,45 @@ namespace Datadog.Trace
         /// </summary>
         public ulong SpanId => Context.SpanId;
 
-        internal ITags Tags { get; set; }
+        /// <summary>
+        /// Gets tags
+        /// </summary>
+        public ITags Tags { get; internal set; }
 
-        internal SpanContext Context { get; }
+        /// <summary>
+        /// Gets the Context
+        /// </summary>
+        public SpanContext Context { get; }
 
-        internal DateTimeOffset StartTime { get; private set; }
+        /// <summary>
+        /// Gets StartTime
+        /// </summary>
+        public DateTimeOffset StartTime { get; private set; }
 
-        internal TimeSpan Duration { get; private set; }
+        /// <summary>
+        /// Gets Duration
+        /// </summary>
+        public TimeSpan Duration { get; private set; }
 
-        internal bool IsFinished { get; private set; }
+        ///// <summary>
+        ///// Gets Tags
+        ///// </summary>
+        ////public Dictionary<string, string> Tags { get; private set; }
 
-        internal bool IsRootSpan => Context?.TraceContext?.RootSpan == this;
+        ///// <summary>
+        ///// Gets Metrics
+        ///// </summary>
+        ////public Dictionary<string, double> Metrics { get; private set; }
+
+        /// <summary>
+        /// Gets a value indicating whether IsFinished
+        /// </summary>
+        public bool IsFinished { get; private set; }
+
+        /// <summary>
+        /// Gets a value indicating whether IsRootSpan
+        /// </summary>
+        public bool IsRootSpan => Context?.TraceContext?.RootSpan == this;
 
         /// <summary>
         /// Returns a <see cref="string" /> that represents this instance.

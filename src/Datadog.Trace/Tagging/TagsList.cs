@@ -6,15 +6,38 @@ using Datadog.Trace.Vendors.MessagePack;
 
 namespace Datadog.Trace.Tagging
 {
-    internal abstract class TagsList : ITags
+    /// <summary>
+    /// Tags List
+    /// </summary>
+    public abstract class TagsList : ITags
     {
         private List<KeyValuePair<string, double>> _metrics;
         private List<KeyValuePair<string, string>> _tags;
 
-        protected List<KeyValuePair<string, double>> Metrics => Volatile.Read(ref _metrics);
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TagsList"/> class.
+        /// </summary>
+        protected TagsList()
+        {
+            this.Metrics = Volatile.Read(ref _metrics);
+            this.Tags = Volatile.Read(ref _tags);
+        }
 
-        protected List<KeyValuePair<string, string>> Tags => Volatile.Read(ref _tags);
+        /// <summary>
+        /// Gets Metrics
+        /// </summary>
+        public List<KeyValuePair<string, double>> Metrics { get; }
 
+        /// <summary>
+        /// Gets Tags
+        /// </summary>
+        public List<KeyValuePair<string, string>> Tags { get; }
+
+        /// <summary>
+        /// Get tag value by key
+        /// </summary>
+        /// <param name="key">tag</param>
+        /// <returns>value</returns>
         public string GetTag(string key)
         {
             foreach (var property in GetAdditionalTags())
@@ -46,6 +69,11 @@ namespace Datadog.Trace.Tagging
             return null;
         }
 
+        /// <summary>
+        /// Get metric by key
+        /// </summary>
+        /// <param name="key">metric</param>
+        /// <returns>value</returns>
         public double? GetMetric(string key)
         {
             foreach (var property in GetAdditionalMetrics())
@@ -77,6 +105,11 @@ namespace Datadog.Trace.Tagging
             return null;
         }
 
+        /// <summary>
+        /// Sets tag value
+        /// </summary>
+        /// <param name="key">tag</param>
+        /// <param name="value">value</param>
         public void SetTag(string key, string value)
         {
             foreach (var property in GetAdditionalTags())
@@ -123,6 +156,11 @@ namespace Datadog.Trace.Tagging
             }
         }
 
+        /// <summary>
+        /// Set metric
+        /// </summary>
+        /// <param name="key">metric</param>
+        /// <param name="value">value</param>
         public void SetMetric(string key, double? value)
         {
             foreach (var property in GetAdditionalMetrics())
@@ -169,6 +207,12 @@ namespace Datadog.Trace.Tagging
             }
         }
 
+        /// <summary>
+        /// Serialize to byte array
+        /// </summary>
+        /// <param name="bytes">array ref</param>
+        /// <param name="offset">start offset</param>
+        /// <returns>offset</returns>
         public int SerializeTo(ref byte[] bytes, int offset)
         {
             int originalOffset = offset;
@@ -179,6 +223,10 @@ namespace Datadog.Trace.Tagging
             return offset - originalOffset;
         }
 
+        /// <summary>
+        /// Represent this object as string
+        /// </summary>
+        /// <returns>string representation</returns>
         public override string ToString()
         {
             var sb = new StringBuilder();
@@ -232,8 +280,16 @@ namespace Datadog.Trace.Tagging
             return sb.ToString();
         }
 
+        /// <summary>
+        /// Get additional tags
+        /// </summary>
+        /// <returns>tags</returns>
         protected virtual IProperty<string>[] GetAdditionalTags() => ArrayHelper.Empty<IProperty<string>>();
 
+        /// <summary>
+        /// Get additional metrics
+        /// </summary>
+        /// <returns>metrics</returns>
         protected virtual IProperty<double?>[] GetAdditionalMetrics() => ArrayHelper.Empty<IProperty<double?>>();
 
         private int WriteTags(ref byte[] bytes, int offset)

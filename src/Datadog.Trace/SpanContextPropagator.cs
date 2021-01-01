@@ -14,7 +14,7 @@ namespace Datadog.Trace
         private const int MaximumSamplingPriority = (int)SamplingPriority.UserKeep;
 
         private static readonly CultureInfo InvariantCulture = CultureInfo.InvariantCulture;
-        private static readonly Vendors.Serilog.ILogger Log = DatadogLogging.For<SpanContextPropagator>();
+        private static readonly Serilog.ILogger Log = DatadogLogging.For<SpanContextPropagator>();
 
         private static readonly int[] SamplingPriorities;
 

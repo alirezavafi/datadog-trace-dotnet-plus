@@ -2,7 +2,7 @@ using System;
 using System.Text.RegularExpressions;
 using Datadog.Trace.Logging;
 using Datadog.Trace.Util;
-using Datadog.Trace.Vendors.Serilog;
+using Serilog;
 
 namespace Datadog.Trace.Ci
 {

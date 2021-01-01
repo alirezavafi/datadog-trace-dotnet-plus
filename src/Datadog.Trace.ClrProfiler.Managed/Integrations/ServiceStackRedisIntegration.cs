@@ -19,7 +19,7 @@ namespace Datadog.Trace.ClrProfiler.Integrations
         private const string RedisNativeClient = "ServiceStack.Redis.RedisNativeClient";
 
         private static readonly IntegrationInfo IntegrationId = IntegrationRegistry.GetIntegrationInfo(nameof(IntegrationIds.ServiceStackRedis));
-        private static readonly Vendors.Serilog.ILogger Log = DatadogLogging.GetLogger(typeof(ServiceStackRedisIntegration));
+        private static readonly Serilog.ILogger Log = DatadogLogging.GetLogger(typeof(ServiceStackRedisIntegration));
 
         /// <summary>
         /// Traces SendReceive.

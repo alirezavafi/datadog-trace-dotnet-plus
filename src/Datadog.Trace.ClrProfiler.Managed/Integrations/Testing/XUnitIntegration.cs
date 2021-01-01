@@ -30,7 +30,7 @@ namespace Datadog.Trace.ClrProfiler.Integrations.Testing
         private const string XUnitQueueTestOutputMethod = "QueueTestOutput";
 
         private static readonly IntegrationInfo IntegrationId = IntegrationRegistry.GetIntegrationInfo(nameof(IntegrationIds.XUnit));
-        private static readonly Vendors.Serilog.ILogger Log = DatadogLogging.GetLogger(typeof(XUnitIntegration));
+        private static readonly Serilog.ILogger Log = DatadogLogging.GetLogger(typeof(XUnitIntegration));
 
         static XUnitIntegration()
         {

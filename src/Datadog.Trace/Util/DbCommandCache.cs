@@ -4,7 +4,7 @@ using System.Data;
 using System.Data.Common;
 using System.Threading;
 using Datadog.Trace.Logging;
-using Datadog.Trace.Vendors.Serilog;
+using Serilog;
 
 namespace Datadog.Trace.Util
 {

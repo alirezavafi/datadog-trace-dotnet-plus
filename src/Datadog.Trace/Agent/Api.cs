@@ -15,7 +15,7 @@ namespace Datadog.Trace.Agent
     {
         private const string TracesPath = "/v0.4/traces";
 
-        private static readonly Vendors.Serilog.ILogger Log = DatadogLogging.For<Api>();
+        private static readonly Serilog.ILogger Log = DatadogLogging.For<Api>();
 
         private readonly IApiRequestFactory _apiRequestFactory;
         private readonly IDogStatsd _statsd;

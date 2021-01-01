@@ -18,7 +18,7 @@ namespace Datadog.Trace.AspNet
     {
         internal static readonly IntegrationInfo IntegrationId = IntegrationRegistry.GetIntegrationInfo(nameof(IntegrationIds.AspNet));
 
-        private static readonly Vendors.Serilog.ILogger Log = DatadogLogging.GetLogger(typeof(TracingHttpModule));
+        private static readonly Serilog.ILogger Log = DatadogLogging.GetLogger(typeof(TracingHttpModule));
 
         // there is no ConcurrentHashSet, so use a ConcurrentDictionary
         // where we only care about the key, not the value

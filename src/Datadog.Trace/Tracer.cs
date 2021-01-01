@@ -25,7 +25,7 @@ namespace Datadog.Trace
     public class Tracer : IDatadogTracer
     {
         private const string UnknownServiceName = "UnknownService";
-        private static readonly Vendors.Serilog.ILogger Log = DatadogLogging.For<Tracer>();
+        private static readonly Serilog.ILogger Log = DatadogLogging.For<Tracer>();
 
         /// <summary>
         /// The number of Tracer instances that have been created and not yet destroyed.
@@ -114,7 +114,7 @@ namespace Datadog.Trace
                     if (_agentWriter == null)
                     {
                         IApi overridingApiClient = new Api(baseEndpoint, apiRequestFactory: null, Statsd);
-                        _agentWriter = _agentWriter ?? new AgentWriter(overridingApiClient, Statsd, queueSize: Settings.TraceQueueSize);
+                        _agentWriter = _agentWriter ?? new AgentWriter();
                     }
                     else
                     {
@@ -123,7 +123,7 @@ namespace Datadog.Trace
                 });
 
             // fall back to default implementations of each dependency if not provided
-            _agentWriter = agentWriter ?? new AgentWriter(new Api(Settings.AgentUri, apiRequestFactory: null, Statsd), Statsd, queueSize: Settings.TraceQueueSize);
+            _agentWriter = agentWriter ?? new AgentWriter();
 
             _scopeManager = scopeManager ?? new AsyncLocalScopeManager();
             Sampler = sampler ?? new RuleBasedSampler(new RateLimiter(Settings.MaxTracesSubmittedPerSecond));

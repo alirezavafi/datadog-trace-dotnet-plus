@@ -7,7 +7,7 @@ namespace Datadog.Trace.ClrProfiler.Integrations
     internal static class LoggerExtensions
     {
         public static void ErrorRetrievingMethod(
-            this Vendors.Serilog.ILogger logger,
+            this Serilog.ILogger logger,
             Exception exception,
             long moduleVersionPointer,
             int mdToken,

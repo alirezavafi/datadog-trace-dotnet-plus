@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Datadog.Trace.Logging;
-using Datadog.Trace.Vendors.Serilog;
+using Serilog;
 
 namespace Datadog.Trace.Util
 {

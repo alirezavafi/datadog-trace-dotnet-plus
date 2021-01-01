@@ -12,8 +12,8 @@ using System.Threading.Tasks;
 using Datadog.Trace.Configuration;
 using Datadog.Trace.Logging;
 using Datadog.Trace.Util;
-using Datadog.Trace.Vendors.Serilog;
 using Datadog.Trace.Vendors.StatsdClient;
+using Serilog;
 
 namespace Datadog.Trace
 {

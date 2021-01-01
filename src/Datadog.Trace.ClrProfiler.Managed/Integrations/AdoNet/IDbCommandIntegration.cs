@@ -18,7 +18,7 @@ namespace Datadog.Trace.ClrProfiler.Integrations.AdoNet
         // ReSharper disable once InconsistentNaming
         private const string IDbCommandTypeName = AdoNetConstants.TypeNames.IDbCommand;
 
-        private static readonly Vendors.Serilog.ILogger Log = DatadogLogging.GetLogger(typeof(IDbCommandIntegration));
+        private static readonly Serilog.ILogger Log = DatadogLogging.GetLogger(typeof(IDbCommandIntegration));
 
         /// <summary>
         /// Instrumentation wrapper for <see cref="IDbCommand.ExecuteReader()"/>.

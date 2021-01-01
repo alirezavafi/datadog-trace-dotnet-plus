@@ -1,7 +1,7 @@
 using System;
 using System.IO;
 using Datadog.Trace.Logging;
-using Datadog.Trace.Vendors.Serilog.Events;
+using Serilog.Events;
 
 namespace Datadog.Trace.Configuration
 {

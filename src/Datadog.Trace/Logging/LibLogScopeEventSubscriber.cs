@@ -12,7 +12,7 @@ namespace Datadog.Trace.Logging
     internal class LibLogScopeEventSubscriber : IDisposable
     {
         private const int _numPropertiesSetOnSpanEvent = 5;
-        private static readonly Vendors.Serilog.ILogger Log = DatadogLogging.GetLogger(typeof(LibLogScopeEventSubscriber));
+        private static readonly Serilog.ILogger Log = DatadogLogging.GetLogger(typeof(LibLogScopeEventSubscriber));
         private readonly IScopeManager _scopeManager;
         private readonly string _defaultServiceName;
         private readonly string _version;

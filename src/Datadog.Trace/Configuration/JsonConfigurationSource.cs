@@ -14,7 +14,7 @@ namespace Datadog.Trace.Configuration
     /// </summary>
     public class JsonConfigurationSource : IConfigurationSource
     {
-        private static readonly Vendors.Serilog.ILogger Log = DatadogLogging.GetLogger(typeof(JsonConfigurationSource));
+        private static readonly Serilog.ILogger Log = DatadogLogging.GetLogger(typeof(JsonConfigurationSource));
 
         private readonly JObject _configuration;
 

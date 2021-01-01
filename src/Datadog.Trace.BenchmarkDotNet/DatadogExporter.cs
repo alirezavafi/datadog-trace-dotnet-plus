@@ -21,7 +21,7 @@ namespace Datadog.Trace.BenchmarkDotNet
         /// </summary>
         public static readonly IExporter Default = new DatadogExporter();
 
-        private static readonly Vendors.Serilog.ILogger Log = DatadogLogging.GetLogger(typeof(DatadogExporter));
+        private static readonly Serilog.ILogger Log = DatadogLogging.GetLogger(typeof(DatadogExporter));
 
         static DatadogExporter()
         {

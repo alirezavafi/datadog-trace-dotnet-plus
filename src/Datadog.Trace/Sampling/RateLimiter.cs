@@ -8,7 +8,7 @@ namespace Datadog.Trace.Sampling
 {
     internal class RateLimiter : IRateLimiter
     {
-        private static readonly Vendors.Serilog.ILogger Log = DatadogLogging.For<RateLimiter>();
+        private static readonly Serilog.ILogger Log = DatadogLogging.For<RateLimiter>();
 
         private readonly ConcurrentQueue<DateTime> _intervalQueue = new ConcurrentQueue<DateTime>();
 

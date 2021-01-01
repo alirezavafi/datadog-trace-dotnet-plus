@@ -26,6 +26,10 @@ Users who need manual instrumentation should reference the "Datadog.Trace" packa
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Serilog" Version="2.10.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Datadog.Trace\Datadog.Trace.csproj" />
 
     <Reference Include="System.Net.Http" />

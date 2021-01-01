@@ -8,7 +8,7 @@ namespace Datadog.Trace.RuntimeMetrics
 {
     internal class PerformanceCounterWrapper : IDisposable
     {
-        private static readonly Vendors.Serilog.ILogger Log = DatadogLogging.For<PerformanceCounterWrapper>();
+        private static readonly Serilog.ILogger Log = DatadogLogging.For<PerformanceCounterWrapper>();
 
         private readonly string _categoryName;
         private readonly string _counterName;

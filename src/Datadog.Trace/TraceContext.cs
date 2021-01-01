@@ -9,7 +9,7 @@ namespace Datadog.Trace
 {
     internal class TraceContext : ITraceContext
     {
-        private static readonly Vendors.Serilog.ILogger Log = DatadogLogging.For<TraceContext>();
+        private static readonly Serilog.ILogger Log = DatadogLogging.For<TraceContext>();
 
         private readonly DateTimeOffset _utcStart = DateTimeOffset.UtcNow;
         private readonly long _timestamp = Stopwatch.GetTimestamp();

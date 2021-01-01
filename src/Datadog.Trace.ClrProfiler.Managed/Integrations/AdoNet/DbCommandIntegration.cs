@@ -19,7 +19,7 @@ namespace Datadog.Trace.ClrProfiler.Integrations.AdoNet
 
         private const string DbCommandTypeName = AdoNetConstants.TypeNames.DbCommand;
 
-        private static readonly Vendors.Serilog.ILogger Log = DatadogLogging.GetLogger(typeof(DbCommandIntegration));
+        private static readonly Serilog.ILogger Log = DatadogLogging.GetLogger(typeof(DbCommandIntegration));
 
         /// <summary>
         /// Instrumentation wrapper for <see cref="DbCommand.ExecuteReader()"/>.

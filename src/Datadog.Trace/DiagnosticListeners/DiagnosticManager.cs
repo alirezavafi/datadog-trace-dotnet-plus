@@ -4,13 +4,13 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using Datadog.Trace.Logging;
-using Datadog.Trace.Vendors.Serilog.Events;
+using Serilog.Events;
 
 namespace Datadog.Trace.DiagnosticListeners
 {
     internal sealed class DiagnosticManager : IDiagnosticManager, IObserver<DiagnosticListener>, IDisposable
     {
-        private static readonly Vendors.Serilog.ILogger Log = DatadogLogging.For<DiagnosticManager>();
+        private static readonly Serilog.ILogger Log = DatadogLogging.For<DiagnosticManager>();
 
         private readonly IEnumerable<DiagnosticObserver> _diagnosticObservers;
         private readonly List<IDisposable> _subscriptions = new List<IDisposable>();

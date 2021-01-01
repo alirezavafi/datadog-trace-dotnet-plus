@@ -4,10 +4,9 @@ using System.IO;
 using System.Runtime.InteropServices;
 using Datadog.Trace.Configuration;
 using Datadog.Trace.Util;
-using Datadog.Trace.Vendors.Serilog;
-using Datadog.Trace.Vendors.Serilog.Core;
-using Datadog.Trace.Vendors.Serilog.Events;
-using Datadog.Trace.Vendors.Serilog.Sinks.File;
+using Serilog;
+using Serilog.Core;
+using Serilog.Events;
 
 namespace Datadog.Trace.Logging
 {
@@ -22,9 +21,7 @@ namespace Datadog.Trace.Logging
         {
             // No-op for if we fail to construct the file logger
             SharedLogger =
-                new LoggerConfiguration()
-                   .WriteTo.Sink<NullSink>()
-                   .CreateLogger();
+                Serilog.Log.Logger;
             try
             {
                 if (GlobalSettings.Source.DebugEnabled)

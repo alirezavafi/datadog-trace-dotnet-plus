@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Datadog.Trace.PlatformHelpers;
 using Datadog.Trace.Util;
-using Datadog.Trace.Vendors.Serilog;
+using Serilog;
 
 namespace Datadog.Trace.Configuration
 {
